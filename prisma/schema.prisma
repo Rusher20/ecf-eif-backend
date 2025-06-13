@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model respondent {
+  id           Int            @id @default(autoincrement())
+  name         String          @unique
+  createdAt    DateTime       @default(now())
+  stepresponse stepresponse[]
+}
+
+model stepresponse {
+  id           Int        @id @default(autoincrement())
+  step         Int
+  question     String
+  answer       String     @db.Text
+  comment      String?    @db.Text
+  respondentId Int
+  createdAt    DateTime   @default(now())
+  respondent   respondent @relation(fields: [respondentId], references: [id], map: "StepResponse_respondentId_fkey")
+
+  @@index([respondentId], map: "StepResponse_respondentId_fkey")
+}

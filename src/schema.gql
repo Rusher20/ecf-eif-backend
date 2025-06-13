@@ -1,0 +1,48 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type StepResponse {
+  id: Int!
+  step: Int!
+  question: String!
+  answer: String!
+  comment: String
+  respondentId: Int!
+  respondent: Respondent
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Respondent {
+  id: Int!
+  name: String!
+  steps: [StepResponse!]!
+}
+
+type Query {
+  respondents: [Respondent!]!
+  respondent(id: Int!): Respondent
+}
+
+type Mutation {
+  createRespondent(input: CreateRespondentInput!): Respondent!
+  createStepResponse(input: StepResponseInput!): StepResponse!
+  submitAllStepResponses(responses: [StepResponseInput!]!): Boolean!
+}
+
+input CreateRespondentInput {
+  name: String!
+}
+
+input StepResponseInput {
+  step: Int!
+  question: String!
+  answer: String!
+  comment: String
+  respondentId: Int!
+}
