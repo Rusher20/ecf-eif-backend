@@ -6,22 +6,19 @@ import { CreateRespondentInput } from './dto/create-respondent.input';
 export class RespondentService {
   constructor(private prisma: PrismaService) {}
 
-async create(input: CreateRespondentInput) {
-  const { name } = input;
+  async create(input: CreateRespondentInput) {
+    // Step 1: Check if name already exists
+    const existing = await this.prisma.respondent.findUnique({
+      where: { name: input.name },
+    });
 
-  const existing = await this.prisma.respondent.findUnique({
-    where: { name },
-  });
+    if (existing) {
+      throw new BadRequestException(`You already answered this questionaire`);
+    }
 
-  if (existing) {
-    throw new BadRequestException(`You already answered this questionnaire`);
+    // Step 2: Create respondent
+    return this.prisma.respondent.create({ data: input });
   }
-
-  return this.prisma.respondent.create({
-    data: { name },
-  });
-}
-
 
   findAll() {
     return this.prisma.respondent.findMany({ include: { stepresponse: true } });
